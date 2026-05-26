@@ -1,1 +1,537 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Struktur Proyek Toko Online</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0c0f;
+      --surface: #111418;
+      --surface2: #181c22;
+      --border: #222830;
+      --accent: #00e5a0;
+      --accent2: #00b894;
+      --text: #e8edf3;
+      --muted: #6b7685;
+      --tag-bg: #0d1f18;
+      --tag-border: #0a3325;
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+
+    /* noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .wrapper {
+      max-width: 780px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 36px;
+      animation: fadeDown 0.5s ease both;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.82rem;
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .back-btn:hover { color: var(--text); border-color: #333d4a; }
+
+    .doc-meta {
+      flex: 1;
+    }
+    .doc-meta h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .doc-meta span {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .badge {
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 5px 12px;
+      border-radius: 6px;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #0d1f18 0%, #0f1a14 60%, #111418 100%);
+      border: 1px solid #0e2e20;
+      border-radius: 16px;
+      padding: 32px 28px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(0,229,160,0.08), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent2);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .hero h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    .stats {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat .num {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1;
+    }
+    .stat .label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 20px;
+      animation: fadeUp 0.5s ease both;
+    }
+    .section:nth-child(3) { animation-delay: 0.15s; }
+    .section:nth-child(4) { animation-delay: 0.2s; }
+    .section:nth-child(5) { animation-delay: 0.25s; }
+    .section:nth-child(6) { animation-delay: 0.3s; }
+    .section:nth-child(7) { animation-delay: 0.35s; }
+    .section:nth-child(8) { animation-delay: 0.4s; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px 12px 0 0;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .section-header:hover { background: var(--surface2); }
+    .section-icon { font-size: 1.1rem; }
+    .section-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      flex: 1;
+    }
+    .section-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      background: #1a1f27;
+      padding: 3px 9px;
+      border-radius: 5px;
+    }
+    .chevron {
+      color: var(--muted);
+      font-size: 0.8rem;
+      transition: transform 0.25s;
+    }
+    .section.open .chevron { transform: rotate(180deg); }
+
+    .section-body {
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.35s ease;
+    }
+    .section.open .section-body {
+      max-height: 2000px;
+    }
+
+    /* subsection */
+    .subsection {
+      padding: 14px 18px 6px;
+      border-bottom: 1px solid #161b22;
+    }
+    .subsection:last-child { border-bottom: none; padding-bottom: 14px; }
+    .subsection-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+    }
+
+    .desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      padding: 10px 18px;
+      border-bottom: 1px solid #161b22;
+      font-style: italic;
+    }
+
+    /* file list */
+    .file-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      padding: 4px 0 8px;
+    }
+    .file-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #12171e;
+      border: 1px solid #1e2730;
+      border-radius: 7px;
+      padding: 5px 11px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #c8d4e0;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .file-chip:hover {
+      background: #161d26;
+      border-color: #2a3a4a;
+    }
+    .file-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-php { background: #6ab0f5; }
+    .dot-html { background: #f5a623; }
+    .dot-img { background: var(--accent); }
+    .dot-conf { background: #cf6679; }
+    .dot-misc { background: #9b8fd4; }
+
+    /* Summary bar */
+    .summary {
+      margin-top: 32px;
+      padding: 20px 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      animation: fadeUp 0.5s 0.45s ease both;
+    }
+    .summary-title {
+      font-size: 0.8rem;
+      color: var(--muted);
+      flex: 0 0 100%;
+      margin-bottom: -8px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .legend-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <a href="tukas_moko.html" class="back-btn">&#8592; Kembali</a>
+    <div class="doc-meta">
+      <h1>Struktur Proyek</h1>
+      <span>struktur_proyek.docx</span>
+    </div>
+    <div class="badge">PHP System</div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <span class="hero-tag">Dokumentasi Sistem</span>
+    <h2>Toko Online Kacamata</h2>
+    <p>Sistem Informasi Toko Kacamata Berbasis PHP</p>
+    <div class="stats">
+      <div class="stat"><span class="num">52</span><span class="label">Total File</span></div>
+      <div class="stat"><span class="num">41</span><span class="label">File PHP</span></div>
+      <div class="stat"><span class="num">3</span><span class="label">File HTML</span></div>
+      <div class="stat"><span class="num">11</span><span class="label">Gambar Produk</span></div>
+    </div>
+  </div>
+
+  <!-- File Utama -->
+  <div class="section open">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="section-icon">📁</span>
+      <span class="section-title">File Utama</span>
+      <span class="section-count">3 file</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="subsection">
+        <div class="file-grid">
+          <div class="file-chip"><span class="file-dot dot-php"></span>index.php — Entry point / redirect utama</div>
+          <div class="file-chip"><span class="file-dot dot-conf"></span>config.php — Konfigurasi koneksi database</div>
+          <div class="file-chip"><span class="file-dot dot-img"></span>panlogo.jpg — Logo toko</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Autentikasi -->
+  <div class="section open">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="section-icon">🔐</span>
+      <span class="section-title">Autentikasi</span>
+      <span class="section-count">10 file</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="desc">Mengelola login, registrasi, OTP, dan logout untuk admin maupun customer.</div>
+      <div class="subsection">
+        <div class="subsection-title">Admin</div>
+        <div class="file-grid">
+          <div class="file-chip"><span class="file-dot dot-php"></span>login.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>login_proses.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>logout.php</div>
+        </div>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">Customer</div>
+        <div class="file-grid">
+          <div class="file-chip"><span class="file-dot dot-php"></span>login_customer.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>login_customer_proses.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>logout_customer.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>register.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>register_proses.php</div>
+        </div>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">OTP</div>
+        <div class="file-grid">
+          <div class="file-chip"><span class="file-dot dot-php"></span>otp.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>otp_proses.php</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Halaman Utama -->
+  <div class="section open">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="section-icon">🏠</span>
+      <span class="section-title">Halaman Utama</span>
+      <span class="section-count">7 file</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="desc">Halaman yang ditampilkan kepada pengunjung dan customer.</div>
+      <div class="subsection">
+        <div class="file-grid">
+          <div class="file-chip"><span class="file-dot dot-php"></span>welcome.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>home.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>toko.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>cari.php</div>
+          <div class="file-chip"><span class="file-dot dot-html"></span>backup_index.html</div>
+          <div class="file-chip"><span class="file-dot dot-html"></span>kontak.html</div>
+          <div class="file-chip"><span class="file-dot dot-html"></span>profile.html</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transaksi -->
+  <div class="section open">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="section-icon">🛒</span>
+      <span class="section-title">Transaksi</span>
+      <span class="section-count">6 file</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="desc">Alur pembelian mulai dari keranjang hingga konfirmasi pembayaran.</div>
+      <div class="subsection">
+        <div class="file-grid">
+          <div class="file-chip"><span class="file-dot dot-php"></span>keranjang.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>pilih_metode.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>bayar.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>proses_bayar.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>sukses.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>status.php</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel Admin -->
+  <div class="section open">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="section-icon">🔧</span>
+      <span class="section-title">Panel Admin</span>
+      <span class="section-count">15 file</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="desc">Pengelolaan produk, stok, dan varian oleh administrator.</div>
+      <div class="subsection">
+        <div class="subsection-title">Dashboard & Produk</div>
+        <div class="file-grid">
+          <div class="file-chip"><span class="file-dot dot-php"></span>admin_dashboard.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>tambah.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>tambah_proses.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>edit.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>edit_proses.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>hapus.php</div>
+        </div>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">Stok</div>
+        <div class="file-grid">
+          <div class="file-chip"><span class="file-dot dot-php"></span>stok.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>stok_edit.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>stok_produk.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>stok_update.php</div>
+        </div>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">Varian Produk</div>
+        <div class="file-grid">
+          <div class="file-chip"><span class="file-dot dot-php"></span>varian.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>varian_edit.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>varian_tambah.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>varian_hapus.php</div>
+          <div class="file-chip"><span class="file-dot dot-php"></span>varian_update.php</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Folder gambar -->
+  <div class="section open">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="section-icon">🖼️</span>
+      <span class="section-title">Folder gambar/</span>
+      <span class="section-count">11 file</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="desc">Berisi 11 file gambar produk (jpg, png, webp) untuk ditampilkan di toko.</div>
+      <div class="subsection">
+        <div class="file-grid">
+          <div class="file-chip"><span class="file-dot dot-img"></span>1770420255-lensa.jpg</div>
+          <div class="file-chip"><span class="file-dot dot-img"></span>1770420528_kacamata1.png</div>
+          <div class="file-chip"><span class="file-dot dot-img"></span>1770420579_kacamata2.png</div>
+          <div class="file-chip"><span class="file-dot dot-img"></span>1770420639_kacamata3.png</div>
+          <div class="file-chip"><span class="file-dot dot-img"></span>1770420666_kacamata las premium.png</div>
+          <div class="file-chip"><span class="file-dot dot-img"></span>1770420693_kacamata6.jpg</div>
+          <div class="file-chip"><span class="file-dot dot-img"></span>1770420711_kacamata 5.jpg</div>
+          <div class="file-chip"><span class="file-dot dot-img"></span>1770420749_kacamata 4.jpg</div>
+          <div class="file-chip"><span class="file-dot dot-img"></span>1770422061-lensa2.jpg</div>
+          <div class="file-chip"><span class="file-dot dot-img"></span>1770686065-renang.webp</div>
+          <div class="file-chip"><span class="file-dot dot-img"></span>1779093495_kocomoto_ben_ra_-.jpg</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="summary">
+    <span class="summary-title">Keterangan Warna</span>
+    <div class="legend-item"><div class="legend-dot" style="background:#6ab0f5"></div> PHP</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f5a623"></div> HTML</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#00e5a0"></div> Gambar</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#cf6679"></div> Config</div>
+  </div>
+
+</div>
+
+<script>
+  function toggle(header) {
+    const section = header.closest('.section');
+    section.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
